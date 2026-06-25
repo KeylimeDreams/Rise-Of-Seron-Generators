@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rise Of Seron Generators</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-main: #021b10;
+      --bg-panel: #062818;
+      --bg-accent: #0b3b24;
+      --border-accent: #1b7f4a;
+      --text-main: #e5fff2;
+      --text-muted: #9fd8b8;
+      --highlight: #4cff9a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #063820 0, #02130b 40%, #000000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 40px;
+    }
+
+    header {
+      border-bottom: 1px solid rgba(76, 255, 154, 0.25);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .logo-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .title-main {
+      font-size: 2.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--highlight);
+      text-shadow: 0 0 12px rgba(76, 255, 154, 0.6);
+    }
+
+    .title-sub {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      max-width: 360px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 24px;
+    }
+
+    .panel {
+      background: linear-gradient(145deg, var(--bg-panel), var(--bg-accent));
+      border-radius: 14px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.7),
+        0 18px 40px rgba(0, 0, 0, 0.85),
+        0 0 32px rgba(76, 255, 154, 0.08);
+      padding: 18px 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(76, 255, 154, 0.08) 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(76, 255, 154, 0.06) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .panel-pill {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(76, 255, 154, 0.6);
+      color: var(--highlight);
+      background: rgba(2, 27, 16, 0.9);
+    }
+
+    .intro-text {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-main);
+      position: relative;
+      z-index: 1;
+    }
+
+    .intro-text strong {
+      color: var(--highlight);
+      font-weight: 600;
+    }
+
+    .generator-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .generator-card {
+      background: rgba(2, 20, 12, 0.9);
+      border-radius: 10px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      padding: 10px 11px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .generator-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(76, 255, 154, 0.12),
+        transparent 40%,
+        transparent 60%,
+        rgba(76, 255, 154, 0.06)
+      );
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .generator-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .generator-name {
+      font-size: 1.02rem;
+      color: var(--highlight);
+    }
+
+    .generator-desc {
+      font-size: 0.86rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .generator-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .generator-meta span {
+      opacity: 0.9;
+    }
+
+    .side-panel-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .side-section-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .side-list {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .side-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dashed rgba(27, 127, 74, 0.4);
+      padding-bottom: 4px;
+    }
+
+    .side-list-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .side-list-value {
+      color: var(--highlight);
+      font-size: 0.82rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .cta-button {
+      border-radius: 999px;
+      border: 1px solid rgba(76, 255, 154, 0.7);
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: rgba(2, 27, 16, 0.9);
+      color: var(--highlight);
+      cursor: pointer;
+    }
+
+    .cta-button.secondary {
+      border-style: dashed;
+      color: var(--text-muted);
+      background: rgba(2, 18, 11, 0.9);
+    }
+
+    footer {
+      margin-top: 26px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(76, 255, 154, 0.25);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-left {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      background: rgba(2, 20, 12, 0.9);
+      color: var(--highlight);
+    }
+
+    @media (max-width: 840px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .title-main {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <header>
+      <div class="logo-block">
+        <div class="title-main">Rise Of Seron</div>
+        <div class="title-sub">Saga Generator Suite</div>
+      </div>
+      <p class="tagline">
+        A focused hub for <strong>Character</strong>, <strong>Stand</strong>, <strong>Lore</strong>, and more—built to
+        keep your Seron universe consistent, scalable, and ready for expansion.
+      </p>
+    </header>
+
+    <main class="grid">
+      <!-- Left: Core intro + generator overview -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Generator overview</div>
+          <div class="panel-pill">Core modules</div>
+        </div>
+
+        <p class="intro-text">
+          The <strong>Rise Of Seron Generators</strong> page is your control center for saga-grade content. Each module
+          is tuned for mythic consistency—names, powers, histories, and conflicts generated in a way that feels native
+          to the Seron universe. Use these generators as building blocks for plugins, wikis, and in‑game lore.
+        </p>
+
+        <div class="generator-grid">
+          <!-- Character Generator -->
+          <article class="generator-card">
+            <div class="generator-label">Generator</div>
+            <div class="generator-name">Character Generator</div>
+            <p class="generator-desc">
+              Builds fully‑formed Seron characters: names, roles, alignments, visual hooks, and core emotional beats.
+              Ideal for rapid casting of factions, rivals, and supporting NPCs.
+            </p>
+            <div class="generator-meta">
+              <span>Scope: Persona & role</span>
+              <span>Output: Profile seed</span>
+            </div>
+          </article>
+
+          <!-- Stand Generator -->
+          <article class="generator-card">
+            <div class="generator-label">Generator</div>
+            <div class="generator-name">Stand Generator</div>
+            <p class="generator-desc">
+              Produces unique Stand concepts tied to Seron’s power logic—names, abilities, limitations, and signature
+              visuals that can be mapped directly into combat modules or plugins.
+            </p>
+            <div class="generator-meta">
+              <span>Scope: Ability & form</span>
+              <span>Output: Stand spec</span>
+            </div>
+          </article>
+
+          <!-- Lore Generator -->
+          <article class="generator-card">
+            <div class="generator-label">Generator</div>
+            <div class="generator-name">Lore Generator</div>
+            <p class="generator-desc">
+              Generates events, myths, and historical threads that stitch your characters and Stands into a coherent
+              timeline—perfect for wiki entries, chapter seeds, and in‑game codex pages.
+            </p>
+            <div class="generator-meta">
+              <span>Scope: World & history</span>
+              <span>Output: Lore fragment</span>
+            </div>
+          </article>
+
+          <!-- Extra / Future Modules -->
+          <article class="generator-card">
+            <div class="generator-label">Generator</div>
+            <div class="generator-name">Extended Modules</div>
+            <p class="generator-desc">
+              Hooks reserved for future generators: factions, relics, locations, soundtrack cues, and more. Designed so
+              you can plug in new modules without breaking existing canon.
+            </p>
+            <div class="generator-meta">
+              <span>Scope: Expansion</span>
+              <span>Output: Config‑ready</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Right: Usage + structure -->
+      <aside class="panel">
+        <div class="side-panel-content">
+          <div>
+            <div class="panel-header">
+              <div class="panel-title">Usage & structure</div>
+              <div class="panel-pill">Integration notes</div>
+            </div>
+
+            <p class="intro-text">
+              This intro page is meant to sit at the top of your generator repo or wiki, explaining what each module
+              does before users dive into forms, scripts, or plugin UIs.
+            </p>
+          </div>
+
+          <div>
+            <div class="side-section-title">Generator stack</div>
+            <ul class="side-list">
+              <li>
+                <span class="side-list-label">Character</span>
+                <span class="side-list-value">Identity, role, emotional core</span>
+              </li>
+              <li>
+                <span class="side-list-label">Stand</span>
+                <span class="side-list-value">Power logic, visuals, constraints</span>
+              </li>
+              <li>
+                <span class="side-list-label">Lore</span>
+                <span class="side-list-value">Events, myths, timelines</span>
+              </li>
+              <li>
+                <span class="side-list-label">Future</span>
+                <span class="side-list-value">Factions, relics, locations</span>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="side-section-title">Next steps</div>
+            <p class="intro-text">
+              Attach your actual generator interfaces below this intro—forms, buttons, or links to individual generator
+              pages—so users can move from concept to output in one flow.
+            </p>
+            <div class="cta-row">
+              <button class="cta-button">Open character module</button>
+              <button class="cta-button">Open stand module</button>
+              <button class="cta-button secondary">View lore index</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="footer-left">Rise Of Seron · Generator hub</div>
+      <div class="footer-right">
+        <span class="footer-tag">Character · Stand · Lore</span>
+        <span class="footer-tag">Canon‑safe expansion</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
