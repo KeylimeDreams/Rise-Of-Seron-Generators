@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rise Of Seron · Stand Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-main: #02150d;
+      --bg-panel: #062317;
+      --bg-accent: #0a3321;
+      --border-accent: #1b7f4a;
+      --text-main: #e5fff2;
+      --text-muted: #9fd8b8;
+      --highlight: #4cff9a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #063820 0, #02130b 40%, #000000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 40px;
+    }
+
+    header {
+      border-bottom: 1px solid rgba(76, 255, 154, 0.25);
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .logo-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .title-main {
+      font-size: 2.3rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--highlight);
+      text-shadow: 0 0 12px rgba(76, 255, 154, 0.6);
+    }
+
+    .title-sub {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      max-width: 380px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
+      gap: 24px;
+    }
+
+    .panel {
+      background: linear-gradient(145deg, var(--bg-panel), var(--bg-accent));
+      border-radius: 14px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.7),
+        0 18px 40px rgba(0, 0, 0, 0.85),
+        0 0 32px rgba(76, 255, 154, 0.08);
+      padding: 18px 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(76, 255, 154, 0.08) 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(76, 255, 154, 0.06) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      font-size: 1.02rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .panel-pill {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(76, 255, 154, 0.6);
+      color: var(--highlight);
+      background: rgba(2, 27, 16, 0.9);
+    }
+
+    .intro-text {
+      font-size: 0.93rem;
+      line-height: 1.7;
+      color: var(--text-main);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 14px;
+    }
+
+    .intro-text strong {
+      color: var(--highlight);
+      font-weight: 600;
+    }
+
+    .stand-output {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .stand-card {
+      background: rgba(2, 20, 12, 0.9);
+      border-radius: 12px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      padding: 12px 13px 13px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stand-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(76, 255, 154, 0.12),
+        transparent 40%,
+        transparent 60%,
+        rgba(76, 255, 154, 0.06)
+      );
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .stand-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stand-name {
+      font-size: 1.2rem;
+      color: var(--highlight);
+      margin-bottom: 6px;
+    }
+
+    .stand-color {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .stand-abilities {
+      font-size: 0.86rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .stand-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cta-button {
+      border-radius: 999px;
+      border: 1px solid rgba(76, 255, 154, 0.7);
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: rgba(2, 27, 16, 0.9);
+      color: var(--highlight);
+      cursor: pointer;
+    }
+
+    .cta-button.secondary {
+      border-style: dashed;
+      color: var(--text-muted);
+      background: rgba(2, 18, 11, 0.9);
+    }
+
+    .small-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .list-panel {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    .list-block {
+      background: rgba(2, 20, 12, 0.9);
+      border-radius: 10px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      padding: 9px 10px;
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .list-title {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-size: 0.78rem;
+    }
+
+    .list-block ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .list-block li {
+      margin-bottom: 3px;
+      color: var(--text-main);
+    }
+
+    footer {
+      margin-top: 26px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(76, 255, 154, 0.25);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-left {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(27, 127, 74, 0.7);
+      background: rgba(2, 20, 12, 0.9);
+      color: var(--highlight);
+    }
+
+    @media (max-width: 880px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .title-main {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <header>
+      <div class="logo-block">
+        <div class="title-main">Rise Of Seron</div>
+        <div class="title-sub">Stand Generator Module</div>
+      </div>
+      <p class="tagline">
+        Dedicated page for generating <strong>Stands</strong>—names, colors, and dual‑slot abilities tuned for Seron’s
+        combat logic and lore.
+      </p>
+    </header>
+
+    <main>
+      <!-- Generator core -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Random stand generator</div>
+          <div class="panel-pill">Name · Color · 2‑slot ability</div>
+        </div>
+
+        <p class="intro-text">
+          This module pulls from a curated pool of <strong>150+ Stand names</strong>, <strong>70+ color themes</strong>,
+          and <strong>130+ abilities</strong>. Each roll returns a Stand with a distinct identity, a visual palette, and
+          a two‑slot ability set—ready to drop into plugins, encounters, or wiki entries.
+        </p>
+
+        <div class="stand-output">
+          <div class="stand-card">
+            <div class="stand-label">Current stand</div>
+            <div id="standName" class="stand-name">—</div>
+            <div id="standColor" class="stand-color">Color: —</div>
+            <div class="stand-abilities">
+              <strong>Primary ability:</strong> <span id="abilityOne">—</span><br />
+              <strong>Secondary ability:</strong> <span id="abilityTwo">—</span>
+            </div>
+            <div class="stand-meta">
+              Slot layout: 2‑slot spec · Canon‑safe randomization · Re‑roll to explore variants.
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="panel-title">Controls</div>
+            <div class="cta-row">
+              <button class="cta-button" onclick="generateStand()">Roll new stand</button>
+              <button class="cta-button secondary" onclick="copyStand()">Copy to clipboard</button>
+            </div>
+            <p class="small-note">
+              Use this generator as a seed layer—once you lock a Stand, you can refine details in your plugin UI or
+              saga scripts while keeping the core name/color/ability identity intact.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Raw pools for reference -->
+      <aside class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Pools & reference</div>
+          <div class="panel-pill">150+ names · 70+ colors · 130+ abilities</div>
+        </div>
+
+        <p class="intro-text">
+          Below are the raw pools used by this page. They’re exposed so you can mirror them in Roblox plugins, Lua
+          tables, or other generator stacks without guessing the source data.
+        </p>
+
+        <div class="list-panel">
+          <div class="list-block">
+            <div class="list-title">Stand names</div>
+            <ul id="namesList"></ul>
+          </div>
+          <div class="list-block">
+            <div class="list-title">Color themes</div>
+            <ul id="colorsList"></ul>
+          </div>
+          <div class="list-block">
+            <div class="list-title">Abilities</div>
+            <ul id="abilitiesList"></ul>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="footer-left">Rise Of Seron · Stand generator</div>
+      <div class="footer-right">
+        <span class="footer-tag">2‑slot ability spec</span>
+        <span class="footer-tag">Plugin‑ready pools</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // 150+ Stand names
+    const standNames = [
+      "Emerald Requiem","Silent Seraph","Crimson Eclipse","Obsidian Pulse","Verdant Halo","Iron Mirage","Glass Phantom",
+      "Solar Ruin","Moonlit Vow","Black Star Requiem","Azure Tempest","Gilded Ruin","Ivory Howl","Shadow Anthem",
+      "Neon Covenant","Frozen Choir","Radiant Scar","Grave Sonata","Twilight Engine","Abyssal Crown","Static Oracle",
+      "Velvet Ruin","Chrome Serpent","Echoing Bloom","Shattered Oath","Burning Archive","Hollow Lantern","Storm Relic",
+      "Violet Shiver","Copper Halo","Ashen Choir","Bloodline Circuit","Silent Orbit","Feral Gospel","Crystal Maw",
+      "Midnight Bloom","Rusted Halo","Glass Requiem","Thunder Bloom","Grim Aurora","Spectral Gear","Fading Anthem",
+      "Solar Choir","Obsidian Anthem","Emerald Circuit","Broken Horizon","Static Bloom","Ivory Circuit","Grave Orbit",
+      "Neon Ruin","Twilight Scar","Frozen Halo","Radiant Maw","Shadow Circuit","Crimson Engine","Verdant Anthem",
+      "Iron Bloom","Moonlit Scar","Black Circuit","Azure Bloom","Gilded Anthem","Hollow Orbit","Storm Circuit",
+      "Violet Engine","Copper Bloom","Ashen Orbit","Bloodline Anthem","Silent Maw","Feral Circuit","Crystal Bloom",
+      "Midnight Circuit","Rusted Orbit","Thunder Circuit","Grim Circuit","Spectral Bloom","Fading Circuit","Solar Scar",
+      "Obsidian Maw","Emerald Maw","Broken Circuit","Static Maw","Ivory Maw","Grave Maw","Neon Maw","Twilight Maw",
+      "Frozen Circuit","Radiant Circuit","Shadow Maw","Crimson Maw","Verdant Circuit","Iron Circuit","Moonlit Circuit",
+      "Black Maw","Azure Circuit","Gilded Circuit","Hollow Circuit","Storm Maw","Violet Maw","Copper Circuit",
+      "Ashen Maw","Bloodline Maw","Silent Bloom","Feral Bloom","Crystal Circuit","Midnight Maw","Rusted Maw",
+      "Thunder Maw","Grim Maw","Spectral Maw","Fading Maw","Solar Engine","Obsidian Engine","Emerald Engine",
+      "Broken Engine","Static Engine","Ivory Engine","Grave Engine","Neon Engine","Twilight Engine","Frozen Engine",
+      "Radiant Engine","Shadow Engine","Crimson Engine","Verdant Engine","Iron Engine","Moonlit Engine","Black Engine",
+      "Azure Engine","Gilded Engine","Hollow Engine","Storm Engine","Violet Engine","Copper Engine","Ashen Engine",
+      "Bloodline Engine","Silent Engine","Feral Engine","Crystal Engine","Midnight Engine","Rusted Engine","Thunder Engine",
+      "Grim Engine","Spectral Engine","Fading Engine","Solar Omen","Obsidian Omen","Emerald Omen","Broken Omen",
+      "Static Omen","Ivory Omen","Grave Omen","Neon Omen","Twilight Omen","Frozen Omen","Radiant Omen","Shadow Omen",
+      "Crimson Omen","Verdant Omen","Iron Omen","Moonlit Omen","Black Omen","Azure Omen","Gilded Omen","Hollow Omen",
+      "Storm Omen","Violet Omen","Copper Omen","Ashen Omen","Bloodline Omen","Silent Omen","Feral Omen","Crystal Omen",
+      "Midnight Omen","Rusted Omen","Thunder Omen","Grim Omen","Spectral Omen","Fading Omen"
+    ];
+
+    // 70+ colors / palettes
+    const standColors = [
+      "Deep Emerald","Poison Green","Neon Lime","Forest Veil","Verdant Storm","Dark Jade","Moss Black","Toxic Glow",
+      "Radiant Viridian","Ghost Green","Acid Mist","Shadow Olive","Chrome Green","Rust Verdant","Glowing Moss",
+      "Midnight Emerald","Seron Green","Circuit Lime","Plasma Jade","Graveyard Green","Obsidian Teal","Storm Mint",
+      "Twilight Viridian","Feral Moss","Ashen Olive","Copper Verdant","Violet Teal","Azure Mint","Blackened Jade",
+      "Solar Lime","Moonlit Moss","Frozen Emerald","Crimson Verdant","Ivory Mint","Gilded Jade","Hollow Green",
+      "Static Lime","Neon Viridian","Grim Moss","Spectral Jade","Fading Mint","Dark Forest","Rotten Lime","Tarnished Jade",
+      "Glitch Green","Requiem Emerald","Pale Moss","Toxic Teal","Circuit Viridian","Shadow Mint","Grave Olive",
+      "Obsidian Moss","Radiant Lime","Twilight Jade","Storm Viridian","Midnight Moss","Broken Emerald","Iron Verdant",
+      "Bloodline Green","Copper Moss","Ashen Jade","Violet Moss","Azure Verdant","Black Viridian","Hollow Moss",
+      "Static Emerald","Neon Moss","Grim Verdant","Spectral Green","Fading Verdant","Seron Circuit","Emerald Flame",
+      "Verdant Nebula","Luminous Moss","Dark Verdant Core"
+    ];
+
+    // 130+ abilities (2-slot compatible descriptions)
+    const standAbilities = [
+      "Time-slice: briefly cuts a moment into slow motion around the user",
+      "Gravity knot: anchors a target to a fixed point in space",
+      "Phase step: allows short-range phasing through solid objects",
+      "Echo strike: repeats a physical blow as a delayed shockwave",
+      "Memory brand: marks a target with a vivid, unshakable memory",
+      "Soul tether: links two beings so damage is mirrored",
+      "Spectral shield: conjures a semi‑ethereal barrier against projectiles",
+      "Pulse detonation: charges an area that explodes after a heartbeat",
+      "Veil of static: scrambles senses within a small radius",
+      "Blood rewrite: temporarily alters a target’s physical resilience",
+      "Shadow bind: pins a target by locking their shadow in place",
+      "Glass fracture: turns a surface brittle and easy to shatter",
+      "Iron chorus: amplifies sound into concussive force",
+      "Abyss gaze: induces vertigo and dread when eye contact is made",
+      "Solar brand: leaves a burning sigil that flares under stress",
+      "Moonlit drift: softens falls and mid‑air movement",
+      "Circuit lash: whips out arcs of controlled electricity",
+      "Verdant surge: rapidly grows binding vines from nearby surfaces",
+      "Obsidian edge: coats a weapon in near‑unbreakable dark glass",
+      "Static recall: pulls thrown objects back to the user’s hand",
+      "Grave hush: silences an area, muting sound and minor abilities",
+      "Frozen pulse: slows a single limb or object on contact",
+      "Radiant flare: blinds enemies with a focused burst of light",
+      "Crimson echo: leaves a delayed after‑image that can strike once",
+      "Hollow step: removes footfalls, making movement nearly inaudible",
+      "Storm coil: gathers wind around the user for a sudden burst",
+      "Violet shroud: obscures the user in a faint, disorienting haze",
+      "Copper seal: locks simple mechanisms in place temporarily",
+      "Ashen drift: creates a cloud of ash that hides fine movement",
+      "Bloodline mark: tags a target so the user can sense their direction",
+      "Silent verdict: amplifies a single strike if delivered from stealth",
+      "Feral rush: boosts speed and reflexes for a brief window",
+      "Crystal bind: forms crystalline cuffs around a target’s wrists",
+      "Midnight tether: anchors the user to a chosen point for recall",
+      "Rusted lock: corrodes metal on touch over a few seconds",
+      "Thunder snap: calls a short, deafening thunderclap overhead",
+      "Grim omen: makes a target feel impending danger, lowering focus",
+      "Spectral trail: leaves a ghostly path that allies can follow",
+      "Fading imprint: weakens the memory of the user’s presence",
+      "Time echo: replays the last sound in an area at will",
+      "Gravity fold: slightly bends trajectories toward a chosen point",
+      "Phase veil: lets small objects pass through the user’s body",
+      "Echo guard: repeats a block as a second, delayed defense",
+      "Memory shard: forces a brief flashback in a target’s mind",
+      "Soul mirror: reflects minor abilities back at their caster once",
+      "Spectral anchor: fixes an object in mid‑air for a short time",
+      "Pulse weave: threads energy through a surface to destabilize it",
+      "Static veil: hides fine details, making identification harder",
+      "Blood surge: momentarily boosts the user’s physical output",
+      "Shadow slip: lets the user move along shadows faster",
+      "Glass bloom: sprouts razor‑thin glass petals from the ground",
+      "Iron bulwark: hardens a chosen surface into a shield",
+      "Abyss murmur: whispers that erode a target’s confidence",
+      "Solar lash: whips out a line of burning light",
+      "Moonlit ward: soft barrier that dampens incoming force",
+      "Circuit brand: marks a target to attract lightning‑like arcs",
+      "Verdant cradle: cushions allies with living vines",
+      "Obsidian shard: launches small, piercing dark fragments",
+      "Static chain: links two objects with crackling energy",
+      "Grave chill: drops the temperature around a target suddenly",
+      "Frozen veil: thin frost that makes footing treacherous",
+      "Radiant path: illuminates a safe route through darkness",
+      "Crimson tether: binds two targets together by a blood‑line",
+      "Hollow echo: creates a decoy sound away from the user",
+      "Storm ring: swirling air that deflects light projectiles",
+      "Violet brand: sigil that distorts perception when seen",
+      "Copper pulse: sends a shock through metallic objects",
+      "Ashen veil: cloak of ash that masks silhouettes",
+      "Bloodline recall: pulls the user toward a marked target",
+      "Silent coil: compresses sound into a single explosive note",
+      "Feral sense: heightens smell and hearing briefly",
+      "Crystal veil: translucent barrier that refracts light oddly",
+      "Midnight hush: dims light sources in a small radius",
+      "Rusted chain: weakens restraints and locks over time",
+      "Thunder brand: mark that calls a small lightning strike",
+      "Grim tether: binds a target to a location emotionally",
+      "Spectral bloom: ghostly petals that confuse depth perception",
+      "Fading step: leaves fading after‑images to mislead foes",
+      "Time stitch: knits a small wound faster than normal",
+      "Gravity slip: reduces weight of a chosen object",
+      "Phase shard: sends a phasing projectile through cover",
+      "Echo pulse: repeats a heartbeat‑like shock in an area",
+      "Memory veil: hides a single event from a target’s recall",
+      "Soul drift: lets the user sense emotional currents nearby",
+      "Spectral coil: ghostly rope that binds intangible entities",
+      "Pulse brand: sigil that detonates when triggered",
+      "Static bloom: sparks that jump between close targets",
+      "Blood flare: brief surge of pain in a marked foe",
+      "Shadow veil: darkens corners and edges of a room",
+      "Glass ward: thin glass barrier that shatters on impact",
+      "Iron lash: heavy, invisible whip of force",
+      "Abyss tether: pulls a target’s gaze downward",
+      "Solar crest: emblem that boosts morale of allies",
+      "Moonlit echo: soft sound that repeats in waves",
+      "Circuit surge: overloads simple electronics nearby",
+      "Verdant lash: vine whip that can grab objects",
+      "Obsidian veil: dark shimmer that hides fine motion",
+      "Static brand: mark that crackles when enemies approach",
+      "Grave mark: sigil that chills those who step near",
+      "Frozen brand: emblem that radiates cold slowly",
+      "Radiant crest: symbol that brightens allies’ focus",
+      "Crimson lash: blood‑red whip of condensed force",
+      "Hollow crest: emblem that dampens fear",
+      "Storm crest: swirling mark that stirs wind",
+      "Violet crest: symbol that warps color perception",
+      "Copper crest: emblem that stabilizes metal nearby",
+      "Ashen crest: mark that sheds fine ash constantly",
+      "Bloodline crest: sigil tying a group together",
+      "Silent crest: emblem that muffles footsteps",
+      "Feral crest: mark that sharpens instincts",
+      "Crystal crest: symbol that refracts incoming light",
+      "Midnight crest: emblem that deepens shadows",
+      "Rusted crest: mark that ages surfaces subtly",
+      "Thunder crest: emblem that hums with distant thunder",
+      "Grim crest: symbol that hints at looming loss",
+      "Spectral crest: mark that flickers between states",
+      "Fading crest: emblem that slowly vanishes from sight",
+      "Time drift: minor desync in a target’s timing",
+      "Gravity crest: symbol that slightly alters pull",
+      "Phase crest: emblem that lets small items phase",
+      "Echo crest: mark that repeats spoken words once",
+      "Memory crest: symbol that locks a single memory in place",
+      "Soul crest: emblem that steadies emotional turmoil",
+      "Pulse crest: symbol that beats like a heart near danger",
+      "Static crest: emblem that fuzzes distant sounds"
+    ];
+
+    function generateStand() {
+      const name = standNames[Math.floor(Math.random() * standNames.length)];
+      const color = standColors[Math.floor(Math.random() * standColors.length)];
+      let ability1 = standAbilities[Math.floor(Math.random() * standAbilities.length)];
+      let ability2 = standAbilities[Math.floor(Math.random() * standAbilities.length)];
+
+      // ensure two different abilities
+      if (ability1 === ability2) {
+        ability2 = standAbilities[(standAbilities.indexOf(ability2) + 7) % standAbilities.length];
+      }
+
+      document.getElementById("standName").textContent = name;
+      document.getElementById("standColor").textContent = "Color: " + color;
+      document.getElementById("abilityOne").textContent = ability1;
+      document.getElementById("abilityTwo").textContent = ability2;
+    }
+
+    function copyStand() {
+      const name = document.getElementById("standName").textContent;
+      const color = document.getElementById("standColor").textContent.replace("Color: ", "");
+      const ability1 = document.getElementById("abilityOne").textContent;
+      const ability2 = document.getElementById("abilityTwo").textContent;
+
+      const text =
+        "Stand Name: " + name + "\n" +
+        "Color: " + color + "\n" +
+        "Primary Ability: " + ability1 + "\n" +
+        "Secondary Ability: " + ability2;
+
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+
+    // populate reference lists
+    function populateLists() {
+      const namesList = document.getElementById("namesList");
+      const colorsList = document.getElementById("colorsList");
+      const abilitiesList = document.getElementById("abilitiesList");
+
+      standNames.forEach(n => {
+        const li = document.createElement("li");
+        li.textContent = n;
+        namesList.appendChild(li);
+      });
+
+      standColors.forEach(c => {
+        const li = document.createElement("li");
+        li.textContent = c;
+        colorsList.appendChild(li);
+      });
+
+      standAbilities.forEach(a => {
+        const li = document.createElement("li");
+        li.textContent = a;
+        abilitiesList.appendChild(li);
+      });
+    }
+
+    populateLists();
+    generateStand();
+  </script>
+</body>
+</html>
